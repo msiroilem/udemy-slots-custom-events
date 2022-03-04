@@ -1,9 +1,39 @@
 <script>
-  import { createEventDispatcher } from 'svelte'
+  import {
+    createEventDispatcher,
+    onDestroy,
+    onMount,
+    beforeUpdate,
+    afterUpdate
+  } from 'svelte'
 
   const dispatch = createEventDispatcher()
 
   let agreed = false
+  let autoscroll = false
+
+  onMount(() => {
+    console.log('onMount')
+  })
+
+  onDestroy(() => {
+    console.log('onDestroy')
+  })
+
+  beforeUpdate(() => {
+    console.log('beforeUpdate')
+    autoscroll = agreed
+  })
+
+  afterUpdate(() => {
+    console.log('afterUpdate')
+    if (autoscroll) {
+      const modal = document.querySelector('.modal')
+      modal.scrollTo(0, modal.scrollHeight)
+    }
+  })
+
+  console.log('Script executed')
 </script>
 
 <div class="backdrop" on:click={() => dispatch('cancel')} />
@@ -44,7 +74,7 @@
     top: 10vh;
     left: 10%;
     width: 80%;
-    max-height: 80vh;
+    max-height: 15vh;
     background: white;
     border-radius: 5px;
     z-index: 100;
